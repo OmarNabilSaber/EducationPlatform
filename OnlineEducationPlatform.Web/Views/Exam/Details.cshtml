@@ -1,0 +1,68 @@
+﻿@model OnlineEducationPlatform.Web.Models.Exam
+
+@{
+    ViewData["Title"] = "Exam Details";
+}
+
+<div class="row justify-content-center" style="min-height: 70vh;">
+    <div class="col-md-5">
+        <div class="card shadow p-4 mb-4" style="background: #f9fafc; border-radius: 1.5rem;">
+            <h2 class="mb-4 text-primary">Exam Details</h2>
+            <div class="mb-3">
+                <span class="fw-bold text-secondary">Title:</span> <span class="ms-2">@Model.Title</span>
+            </div>
+            <div class="mb-3">
+                <span class="fw-bold text-secondary">Class:</span> <span class="ms-2">@Model.Class?.ClassName</span>
+            </div>
+            <div class="mb-3">
+                <span class="fw-bold text-secondary">Subject:</span> <span class="ms-2">@Model.Subject?.Name</span>
+            </div>
+            <div class="mb-3">
+                <span class="fw-bold text-secondary">Instructions:</span> <span class="ms-2">@Model.Instructions</span>
+            </div>
+            <div class="mb-3">
+                <span class="fw-bold text-secondary">Available From:</span> <span class="ms-2">@Model.AvailableFrom.ToString("yyyy-MM-dd HH:mm")</span>
+            </div>
+            <div class="mb-3">
+                <span class="fw-bold text-secondary">Available To:</span> <span class="ms-2">@Model.AvailableTo.ToString("yyyy-MM-dd HH:mm")</span>
+            </div>
+            <div class="mb-3">
+                <span class="fw-bold text-secondary">Time Limit:</span> <span class="ms-2">@Model.TimeLimitMinutes minutes</span>
+            </div>
+            <div class="mb-3">
+                <span class="fw-bold text-secondary">Passing Score:</span> <span class="ms-2">@Model.PassingScore</span>
+            </div>
+            <a asp-action="Index" class="btn btn-outline-primary w-100 mt-3">Back to List</a>
+        </div>
+    </div>
+    <div class="col-md-7">
+        <div class="card shadow p-4" style="background: #f9fafc; border-radius: 1.5rem; min-height: 300px;">
+            <h4 class="text-primary mb-3">Questions</h4>
+            @if (Model.Questions != null && Model.Questions.Any())
+            {
+                <ol class="ps-3">
+                    @foreach (var q in Model.Questions)
+                    {
+                        <li class="mb-3">
+                            <div class="mb-1"><span class="fw-bold text-secondary">Text:</span> <span class="ms-2">@q.Text</span></div>
+                            <div class="mb-1"><span class="fw-bold text-secondary">Points:</span> <span class="ms-2">@q.Points</span></div>
+                            <div class="mb-1"><span class="fw-bold text-secondary">Options:</span>
+                                <ul class="ms-4">
+                                    @foreach (var option in q.Options)
+                                    {
+                                        <li>@option</li>
+                                    }
+                                </ul>
+                            </div>
+                            <div class="mb-1"><span class="fw-bold text-secondary">Correct Answer:</span> <span class="ms-2">@q.CorrectAnswer</span></div>
+                        </li>
+                    }
+                </ol>
+            }
+            else
+            {
+                <p class="text-muted">No questions added yet.</p>
+            }
+        </div>
+    </div>
+</div>

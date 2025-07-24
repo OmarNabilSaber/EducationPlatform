@@ -1,0 +1,31 @@
+# Build results
+bin/
+obj/
+**/bin/
+**/obj/
+
+# User-specific files
+*.user
+*.vspscc
+*.suo
+.vscode/
+.idea/
+
+# Visual Studio
+.vs/
+
+# Rider
+.idea/
+
+# ASP.NET Secrets
+secrets.json
+
+# Entity Framework
+Migrations/*Snapshot.cs
+
+# Database files (don’t track local DB)
+*.mdf
+*.ldf
+
+# Others
+.env

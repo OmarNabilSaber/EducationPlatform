@@ -1,0 +1,35 @@
+﻿@model OnlineEducationPlatform.Web.Models.Book
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1 class="mb-4">Book Details</h1>
+<div class="row justify-content-center align-items-center">
+    <div class="col-md-4 text-center mb-3 mb-md-0">
+        @if (!string.IsNullOrEmpty(Model.ImageUrl))
+        {
+            <img src="@Model.ImageUrl" alt="Book Image" class="img-fluid rounded shadow-sm" style="max-height:250px; max-width:100%;" />
+        }
+    </div>
+    <div class="col-md-6">
+        <div class="card shadow-sm p-4">
+            <dl class="row mb-3">
+                <dt class = "col-sm-4">@Html.DisplayNameFor(model => model.Name)</dt>
+                <dd class = "col-sm-8">@Html.DisplayFor(model => model.Name)</dd>
+                <dt class = "col-sm-4">@Html.DisplayNameFor(model => model.Description)</dt>
+                <dd class = "col-sm-8">@Html.DisplayFor(model => model.Description)</dd>
+            </dl>
+            @if (!string.IsNullOrEmpty(Model.BookUrl))
+            {
+                <div class="d-grid mb-3">
+                    <a href="@Model.BookUrl" target="_blank" class="btn btn-primary">Open PDF</a>
+                </div>
+            }
+            <div class="text-center">
+                <a asp-action="Edit" asp-route-id="@Model?.BookId" class="btn btn-outline-secondary me-2">Edit</a>
+                <a asp-action="Index" class="btn btn-link">Back to List</a>
+            </div>
+        </div>
+    </div>
+</div>

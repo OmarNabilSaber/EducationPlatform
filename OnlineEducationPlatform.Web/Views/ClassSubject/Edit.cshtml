@@ -1,0 +1,78 @@
+﻿@model OnlineEducationPlatform.Web.ViewModels.ClassSubjectsViewModel
+@{
+    ViewData["Title"] = "Edit Class Subjects";
+    var teacherName = Model.Class.Teacher?.FullName ?? Model.Class.Teacher?.UserName ?? "";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="row justify-content-center mb-4">
+                <div class="col-md-10">
+                    <div class="text-center mb-5">
+                        <h1 class="display-4 fw-bold text-primary">
+                            <i class="bi bi-journal-bookmark-fill me-2"></i>@Model.Class.ClassName
+                        </h1>
+                        <div class="fs-5 text-secondary mb-2">
+                            <i class="bi bi-person-badge-fill me-2"></i>Teacher: <span class="fw-semibold">@Model.Class.Teacher?.FullName</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <form id="subjectsForm">
+                <h5>Assign Subjects</h5>
+                <div class="list-group">
+                    @foreach (var subject in Model.AllSubjects)
+                    {
+                        var isChecked = Model.ClassSubjects.Any(cs => cs.SubjectId == subject.SubjectId);
+                        <label class="list-group-item">
+                            <input type="checkbox" name="subjectIds" value="@subject.SubjectId" @(isChecked ? "checked" : "") />
+                            @subject.Name
+                        </label>
+                    }
+                </div>
+                <input type="hidden" id="classId" value="@Model.Class.ClassId" />
+                <button type="button" id="saveBtn" class="btn btn-primary mt-3">Save</button>
+                <a asp-action="Index" asp-controller="Class" class="btn btn-secondary mt-3">Back</a>
+            </form>
+            <div id="resultMsg" class="mt-2"></div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#saveBtn').click(function () {
+                var selectedSubjects = [];
+                $('input[name="subjectIds"]:checked').each(function () {
+                    selectedSubjects.push(parseInt($(this).val()));
+                });
+                var classId = $('#classId').val();
+                $.ajax({
+                    url: '/ClassSubject/Edit',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        classId: parseInt(classId),
+                        subjectIds: selectedSubjects
+                    }),
+                    success: function (response) {
+                        if (response.success) {
+                            $('#resultMsg').html('<div class="alert alert-success">Subjects updated successfully!</div>');
+                        } else {
+                            $('#resultMsg').html('<div class="alert alert-danger">' + response.error + '</div>');
+                        }
+                    },
+                    error: function (xhr) {
+                        $('#resultMsg').html('<div class="alert alert-danger">An error occurred while saving.</div>');
+                    }
+                });
+            });
+        });
+    </script>
+}
+

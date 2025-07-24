@@ -1,0 +1,101 @@
+﻿@model OnlineEducationPlatform.Web.ViewModels.ClassSubjectsViewModel
+
+@{
+    ViewData["Title"] = "Class Details";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center mb-4">
+        <div class="col-md-10">
+            <div class="text-center mb-5">
+                <h1 class="display-4 fw-bold text-primary">
+                    <i class="bi bi-journal-bookmark-fill me-2"></i>@Model.Class.ClassName
+                </h1>
+                <div class="fs-5 text-secondary mb-2">
+                    <i class="bi bi-person-badge-fill me-2"></i>Teacher: <span class="fw-semibold">@Model.Class.Teacher?.FullName</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row g-4">
+        <div class="col-md-6">
+            <h4 class="mb-3 text-primary"><i class="bi bi-bookmarks-fill me-2"></i>Subjects</h4>
+            <div class="row g-4 justify-content-center">
+                @if (Model.ClassSubjects != null && Model.ClassSubjects.Count > 0)
+                {
+                    @foreach (var cs in Model.ClassSubjects)
+                    {
+                        <div class="col-12 col-sm-6 col-md-12">
+                            <div class="card h-100 shadow-sm border-0 mb-3" style="border-radius: 1rem;">
+                                <div class="card-body d-flex flex-column justify-content-between">
+                                    <div>
+                                        <h5 class="card-title text-secondary mb-3">
+                                            <i class="bi bi-book me-2"></i>@cs.Subject?.Name
+                                        </h5>
+                                    </div>
+                                    <div class="mt-auto">
+                                        <a asp-controller="Subject" asp-action="Details" asp-route-id="@cs.Subject?.SubjectId" class="btn btn-outline-primary w-100">
+                                            <i class="bi bi-info-circle me-1"></i>View Details
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="col-12 text-center">
+                        <span class="text-muted">No subjects assigned.</span>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="col-md-6">
+            <h4 class="mb-3 text-success"><i class="bi bi-people-fill me-2"></i>Students</h4>
+            <div class="row g-4 justify-content-center">
+                @if (Model.Students != null && Model.Students.Count > 0)
+                {
+                    @foreach (var student in Model.Students)
+                    {
+                        <div class="col-12 col-sm-6 col-md-12">
+                            <div class="card h-100 shadow-sm border-0 mb-3" style="border-radius: 1rem;">
+                                <div class="card-body d-flex flex-column justify-content-between">
+                                    <div>
+                                        <h5 class="card-title text-success mb-2">
+                                            <i class="bi bi-person-circle me-2"></i>@student.FullName
+                                        </h5>
+                                        <div class="text-muted small"><i class="bi bi-envelope me-1"></i>@student.Email</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="col-12 text-center">
+                        <span class="text-muted">No students enrolled.</span>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+    {
+        <div class="d-flex justify-content-center gap-3 mt-5">
+            <a asp-action="Edit" asp-route-id="@Model.Class?.ClassId" class="btn btn-outline-primary px-4"><i class="bi bi-pencil-square me-1"></i>Edit</a>
+            <a asp-action="Index" class="btn btn-outline-secondary px-4"><i class="bi bi-arrow-left me-1"></i>Back to List</a>
+        </div>
+    }
+    @if (User.Identity.IsAuthenticated && User.IsInRole("Student"))
+    {
+        <div class="d-flex justify-content-center gap-3 mt-5">
+            <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary px-4"><i class="bi bi-arrow-left me-1"></i>Back</a>
+        </div>
+    }
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+}

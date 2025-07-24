@@ -1,0 +1,135 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    bool isAuthenticated = User.Identity.IsAuthenticated;
+    bool isAdmin = User.IsInRole("Admin");
+    bool isTeacher = User.IsInRole("Teacher");
+    bool isStudent = User.IsInRole("Student");
+    var username = isAuthenticated ? User.Identity.Name : "Guest";
+}
+
+<div class="mb-4">
+    @if (isAuthenticated)
+    {
+        <h3 class="text-primary">Welcome, @username!</h3>
+        @if (isAdmin)
+        {
+            <p>You are logged in as <strong>Administrator</strong>. You can manage users, classes, and exams.</p>
+        }
+        else if (isTeacher)
+        {
+            <p>You are logged in as <strong>Teacher</strong>. You can manage your assigned classes and exams.</p>
+        }
+        else if (isStudent)
+        {
+            <p>You are logged in as <strong>Student</strong>. You can participate in exams and view your results.</p>
+        }
+    }
+    else
+    {
+        <div class="card border-info">
+            <div class="card-body">
+                <h5 class="card-title text-info">Welcome to the Online Education Platform</h5>
+                <p class="card-text">Please login to access your personalized dashboard.</p>
+                <a asp-controller="Account" asp-action="Login" class="btn btn-info">Login</a>
+            </div>
+        </div>
+    }
+</div>
+
+@if (isAuthenticated)
+{
+    <div class="row g-4">
+        @if (isAdmin || isTeacher)
+        {
+            <div class="col-md-4">
+                <div class="card text-bg-primary h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Manage Exams</h5>
+                        <p class="card-text">Create and manage exams for your classes.</p>
+                        <a asp-controller="Exam" asp-action="Index" class="btn btn-light">Go to Exams</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card text-bg-success h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Classes</h5>
+                        <p class="card-text">View and edit class lists and assignments.</p>
+                        <a asp-controller="Class" asp-action="Index" class="btn btn-light">Go to Classes</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card text-bg-warning h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Subjects</h5>
+                        <p class="card-text">Manage subjects and their associations.</p>
+                        <a asp-controller="Subject" asp-action="Index" class="btn btn-light">Go to Subjects</a>
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (isAdmin)
+        {
+            <div class="col-md-4">
+                <div class="card text-bg-danger h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">User Management</h5>
+                        <p class="card-text">View and manage user accounts and roles.</p>
+                        <a asp-controller="UserManagement" asp-action="Index" class="btn btn-light">Manage Users</a>
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (isStudent)
+        {
+            <div class="col-md-4">
+                <div class="card text-bg-secondary h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">My Exams</h5>
+                        <p class="card-text">Take and review your available exams.</p>
+                        <a asp-controller="StudentExam" asp-action="Index" class="btn btn-light">View Exams</a>
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (isStudent || isTeacher)
+        {
+            <div class="col-md-4">
+                <div class="card text-bg-dark h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">My Account</h5>
+                        <p class="card-text">View and update your personal info and password.</p>
+                        <a asp-controller="ManageAccount" asp-action="Index" class="btn btn-light">My Profile</a>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <div class="col-md-4">
+            <div class="card text-bg-info h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Books</h5>
+                    <p class="card-text">Browse educational books and resources.</p>
+                    <a asp-controller="Book" asp-action="Index" class="btn btn-light">View Books</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+}
+@if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+{
+    @await Html.PartialAsync("AdminDashboard")
+}
+
+@if (User.Identity.IsAuthenticated && User.IsInRole("Teacher"))
+{
+    @await Html.PartialAsync("TeacherDashboard")
+}

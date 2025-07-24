@@ -1,0 +1,50 @@
+﻿@model OnlineEducationPlatform.Web.ViewModels.StudentSolveExamViewModel
+@{
+    ViewData["Title"] = "Exam Result";
+    var score = ViewBag.StudentScore;
+}
+
+<h2>Results for: @Model.Title</h2>
+
+<div class="alert alert-success">
+    <strong>Your Score:</strong> @score
+</div>
+
+@for (int i = 0; i < Model.Questions.Count; i++)
+{
+    var question = Model.Questions[i];
+    var isCorrect = question.Answer == question.CorrectAnswer;
+
+    <div class="card my-3 @(isCorrect ? "border-success" : "border-danger")">
+        <div class="card-header @(isCorrect ? "bg-success text-white" : "bg-danger text-white")">
+            Question @(i + 1)
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">@question.Text</h5>
+
+            <ul class="list-group">
+                @foreach (var option in question.Options)
+                {
+                    var isSelected = option == question.Answer;
+                    var isCorrectOption = option == question.CorrectAnswer;
+                    <li class="list-group-item
+                                @(isCorrectOption ? "list-group-item-success" : "")
+                                @(isSelected && !isCorrectOption ? "list-group-item-danger" : "")">
+                        <input type="radio" disabled
+                               @(isSelected ? "checked" : "") /> @option
+                        @if (isCorrectOption)
+                        {
+                            <span class="badge bg-success ms-2">Correct</span>
+                        }
+                        @if (isSelected && !isCorrectOption)
+                        {
+                            <span class="badge bg-danger ms-2">Your Answer</span>
+                        }
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+}
+
+<a asp-action="Index" class="btn btn-primary mt-4">Back to Exam List</a>

@@ -1,0 +1,59 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using OnlineEducationPlatform.Web.Users
+@inject UserManager<ApplicationUser> UserManager
+@inject SignInManager<ApplicationUser> SignInManager
+@model IEnumerable<OnlineEducationPlatform.Web.Models.Book>
+
+@{
+    ViewData["Title"] = "Books";
+}
+
+<header class="py-3 mb-4 border-bottom">
+    <div class="container d-flex flex-wrap justify-content-center">
+        <a href="/" class="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto text-dark text-decoration-none">
+            <h1 class="mb-4">Books</h1>
+        </a>
+        @if (User.Identity.IsAuthenticated && (User.IsInRole("Instructor") || User.IsInRole("Admin")))
+        {
+            <p>
+                <a asp-action="Create" class="btn btn-primary mb-3">Add New Book</a>
+            </p>
+        }
+    </div>
+</header>
+
+<div class="row g-4">
+@foreach (var item in Model)
+{
+    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+        <div class="card h-100 shadow-sm border-0 book-card" style="transition: box-shadow 0.2s;">
+            @if (!string.IsNullOrEmpty(item.ImageUrl))
+            {
+                <div class="d-flex justify-content-center align-items-center" style="background: #f8f9fa; min-height: 250px;">
+                    <img src="@item.ImageUrl" class="img-fluid" alt="@item.Name" style="height: 250px; max-width: 90%; object-fit: contain; border-top-left-radius: 1rem; border-top-right-radius: 1rem;" />
+                </div>
+            }
+            <div class="card-body bg-white border-0 d-flex flex-column justify-content-center align-items-center">
+                <h5 class="card-title">@item.Name</h5>
+                <p class="card-text">@item.Description</p>
+            </div>
+            <div class="card-footer bg-white border-0 d-flex justify-content-center align-items-center">
+                @if (!string.IsNullOrEmpty(item.BookUrl))
+                {
+                    <a href="@item.BookUrl" target="_blank" class="btn btn-sm btn-primary  ms-2">Open PDF</a>
+                }
+                    @if (User.Identity.IsAuthenticated && (User.IsInRole("Instructor") || User.IsInRole("Admin")))
+                {
+                    <a asp-action="Edit" asp-route-id="@item.BookId" class="btn btn-sm btn-warning  ms-2">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@item.BookId" class="btn btn-sm btn-danger  ms-2">Delete</a>
+                }
+            </div>
+        </div>
+    </div>
+}
+</div>
+<style>
+.book-card:hover {
+    box-shadow: 0 6px 24px rgba(0,0,0,0.10) !important;
+}
+</style>

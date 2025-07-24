@@ -1,0 +1,52 @@
+﻿@model List<OnlineEducationPlatform.Web.Models.Exam>
+
+@{
+    ViewData["Title"] = "Exams List";
+}
+
+<h2 class="mb-4 text-primary fw-bold">Exams</h2>
+
+<div class="d-flex justify-content-end mb-3">
+    <a class="btn btn-primary" asp-action="Create">Create New Exam</a>
+</div>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Class</th>
+            <th>Subject</th>
+            <th>Available From</th>
+            <th>Available To</th>
+            <th>Time Limit (mins)</th>
+            <th>Passing Score</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var exam in Model)
+        {
+            <tr>
+                <td>@exam.Title</td>
+                <td>@exam.Class?.ClassName</td>
+                <td>@exam.Subject?.Name</td>
+                <td>@exam.AvailableFrom.ToString("yyyy-MM-dd")</td>
+                <td>@exam.AvailableTo.ToString("yyyy-MM-dd")</td>
+                <td>@exam.TimeLimitMinutes</td>
+                <td>@exam.PassingScore</td>
+                <td>
+                    <a class="btn btn-sm btn-info" asp-action="Details" asp-route-id="@exam.ExamId">Details</a>
+                    <a class="btn btn-sm btn-warning" asp-action="Edit" asp-route-id="@exam.ExamId">Edit</a>
+                    <form asp-action="Delete" asp-route-id="@exam.ExamId" method="post" style="display:inline">
+                        <button class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                    </form>
+
+                    @if (User.Identity.IsAuthenticated && User.IsInRole("Student"))
+                    {
+                        <a asp-controller="StudentExam" asp-action="Solve" asp-route-id="@exam.ExamId" class="btn btn-sm btn-outline-primary">Solve</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

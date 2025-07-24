@@ -1,0 +1,79 @@
+﻿@model OnlineEducationPlatform.Web.ViewModels.StudentDashboardViewModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+<div class="row mb-4">
+    <div class="col-md-6">
+        @if (Model.Class != null)
+        {
+            <div class="card shadow border-0 mb-3" style="border-radius: 1.2rem;">
+                <div class="card-header bg-primary text-white" style="border-top-left-radius: 1.2rem; border-top-right-radius: 1.2rem;">
+                    <h4 class="mb-0"><i class="bi bi-journal-bookmark-fill me-2"></i>@Model.Class.ClassName</h4>
+                </div>
+                <div class="card-body">
+                    <div class="mb-2"><strong>Teacher:</strong> @Model.Class.Teacher?.FullName</div>
+                    <div>
+                        <strong>Subjects:</strong>
+                        @if (Model.Subjects != null && Model.Subjects.Count > 0)
+                        {
+                            <div class="row g-2 mt-2">
+                                @foreach (var subject in Model.Subjects)
+                                {
+                                    <div class="col-12 col-sm-6 col-md-12">
+                                        <div class="card h-100 border-secondary mb-2">
+                                            <div class="card-body d-flex flex-column justify-content-between">
+                                                <h6 class="card-title text-secondary"><i class="bi bi-book me-1"></i>@subject.Name</h6>
+                                                <a asp-controller="Subject" asp-action="Details" asp-route-id="@subject.SubjectId" class="btn btn-outline-primary btn-sm mt-2 w-100">
+                                                    <i class="bi bi-secondary-circle me-1"></i>View Details
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <span class="text-muted">No subjects assigned.</span>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="col-md-6">
+        <div class="d-flex flex-column gap-4">
+            <div class="card text-bg-success h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Assignment</h5>
+                    <p class="card-text">Always practice!</p>
+                    <a asp-controller="Assignment" asp-action="Index" class="btn btn-light">Go to Assignment</a>
+                </div>
+            </div>
+            <div class="card text-bg-primary h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Exams</h5>
+                    <p class="card-text">Are You Ready!</p>
+                    <a asp-controller="StudentExam" asp-action="Index" class="btn btn-light">Go to Exams</a>
+                </div>
+            </div>
+            <div class="card text-bg-info h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Books</h5>
+                    <p class="card-text">reading is the Fundamental skill for all learning</p>
+                    <a asp-controller="Book" asp-action="Index" class="btn btn-light">Go to Books</a>
+                </div>
+            </div>
+            <div class="card text-bg-secondary h-100">
+                <div class="card-body">
+                    <h5 class="card-title">My Account</h5>
+                    <p class="card-text">View and update your personal information.</p>
+                    <a asp-controller="ManageAccount" asp-action="Index" class="btn btn-light">Go to My Account</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+}
