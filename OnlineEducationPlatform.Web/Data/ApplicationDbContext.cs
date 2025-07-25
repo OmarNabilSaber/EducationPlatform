@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using OnlineEducationPlatform.Web.Models;
 using System.Security.Claims;
@@ -27,8 +28,7 @@ namespace OnlineEducationPlatform.Infrastructure.Data
         {
 
             modelBuilder.Entity<ClassSubject>().HasKey(cs => new { cs.ClassId, cs.SubjectId });
-            modelBuilder.Entity<AssignmentSubmission>()
-                .HasKey(asb => new { asb.AssignmentId, asb.StudentId });
+            modelBuilder.Entity<AssignmentSubmission>().HasKey(asb => new { asb.AssignmentId, asb.StudentId });
 
             modelBuilder.Entity<AssignmentSubmission>()
                 .Property(p => p.Score)
@@ -41,6 +41,12 @@ namespace OnlineEducationPlatform.Infrastructure.Data
                 .Property(p => p.Points)
                 .HasPrecision(18, 2);
 
+            modelBuilder.Entity<Assignment>(entity =>
+            {
+                entity.HasMany(a => a.Submissions)
+                       .WithOne(s => s.Assignment)
+                       .HasForeignKey(s => s.AssignmentId);
+            });
             modelBuilder.Entity<Notification>( entity =>
             {
                 entity.Property(n => n.Title).IsRequired(false);
@@ -70,10 +76,10 @@ namespace OnlineEducationPlatform.Infrastructure.Data
                       .WithOne(e => e.Class)
                       .HasForeignKey(e => e.ClassId)
                       .OnDelete(DeleteBehavior.Cascade);
-
+                // Class -> Assignments (One-to-Many)
                 entity.HasMany(c => c.Assignments)
                       .WithOne(a => a.Class)
-                      .HasForeignKey(a => a.SubjectId)
+                      .HasForeignKey(a => a.ClassId)
                       .OnDelete(DeleteBehavior.Cascade);
             });
 
@@ -85,13 +91,13 @@ namespace OnlineEducationPlatform.Infrastructure.Data
                       .HasForeignKey(e => e.SubjectId)
                       .OnDelete(DeleteBehavior.Cascade);
 
-                // Class -> ClassSubject (One-to-Many)
+                // Subject -> ClassSubject (One-to-Many)
                 entity.HasMany(c => c.Classes)
                       .WithOne(e => e.Subject)
                       .HasForeignKey(e => e.SubjectId)
                       .OnDelete(DeleteBehavior.Cascade);
 
-                // Class -> Assignment (One-to-Many)
+                // Subject -> Assignment (One-to-Many)
                 entity.HasMany(c => c.Assignments)
                       .WithOne(a => a.Subject)
                       .HasForeignKey(a => a.SubjectId)
@@ -155,6 +161,15 @@ namespace OnlineEducationPlatform.Infrastructure.Data
                 // Submission -> Student (Many-to-One)
                 entity.HasOne(s => s.Student)
                       .WithMany(s => s.ExamSubmissions)
+                      .HasForeignKey(s => s.StudentId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<AssignmentSubmission>(entity =>
+            {
+                // Submission -> Student (Many-to-One)
+                entity.HasOne(a => a.Student)
+                      .WithMany(s => s.AssignmentSubmission)
                       .HasForeignKey(s => s.StudentId)
                       .OnDelete(DeleteBehavior.Cascade);
             });

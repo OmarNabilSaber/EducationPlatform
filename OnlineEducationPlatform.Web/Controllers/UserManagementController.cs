@@ -44,6 +44,11 @@ namespace OnlineEducationPlatform.Web.Controllers
         public async Task<IActionResult> Create(CreateUserViewModel model)
         {
             if (!ModelState.IsValid) return View(model);
+            if (model.Password != model.ConfirmPassword)
+            {
+                ModelState.AddModelError("ConfirmPassword", "Password and Confirm Password do not match.");
+                return View(model);
+            }
             
             if (model.Role == "Admin")
             {
@@ -124,6 +129,8 @@ namespace OnlineEducationPlatform.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(EditUserViewModel model)
         {
+            ModelState.Remove("Password");
+            ModelState.Remove("ConfirmPassword");
             if (!ModelState.IsValid)
                 return View(model);
 
@@ -139,6 +146,27 @@ namespace OnlineEducationPlatform.Web.Controllers
             user.Email = model.Email;
             user.UserName = model.Email.Split('@')[0].Trim(); 
             
+            // Only update password if a new password is provided
+            if (!string.IsNullOrEmpty(model.Password) || !string.IsNullOrEmpty(model.ConfirmPassword))
+            {
+                if (model.Password != model.ConfirmPassword)
+                {
+                    ModelState.AddModelError("ConfirmPassword", "Password and Confirm Password do not match.");
+                    return View(model);
+                }
+                if (!string.IsNullOrEmpty(model.Password))
+                {
+                    var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                    var passwordResult = await _userManager.ResetPasswordAsync(user, token, model.Password);
+                    if (!passwordResult.Succeeded)
+                    {
+                        foreach (var error in passwordResult.Errors)
+                            ModelState.AddModelError("Password", error.Description);
+                        return View(model);
+                    }
+                }
+            }
+
             var result = await _userManager.UpdateAsync(user);
             if (!result.Succeeded)
             {

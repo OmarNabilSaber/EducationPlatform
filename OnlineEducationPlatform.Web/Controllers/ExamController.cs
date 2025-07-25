@@ -260,20 +260,20 @@ namespace OnlineEducationPlatform.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        [HttpGet]
-        [Authorize(Roles = "Admin,Instructor")]
-        public JsonResult GetSubjectsForClass(int classId)
-        {
-            var subjectIds = _context.ClassSubjects
-                .Where(cs => cs.ClassId == classId)
-                .Select(cs => cs.SubjectId)
-                .ToList();
-            var subjects = _context.Subjects
-                .Where(s => subjectIds.Contains(s.SubjectId))
-                .Select(s => new { s.SubjectId, s.Name })
-                .ToList();
-            return Json(subjects);
-        }
+        //[HttpGet]
+        //[Authorize(Roles = "Admin,Instructor")]
+        //public JsonResult GetSubjectsForClass(int classId)
+        //{
+        //    var subjectIds = _context.ClassSubjects
+        //        .Where(cs => cs.ClassId == classId)
+        //        .Select(cs => cs.SubjectId)
+        //        .ToList();
+        //    var subjects = _context.Subjects
+        //        .Where(s => subjectIds.Contains(s.SubjectId))
+        //        .Select(s => new { s.SubjectId, s.Name })
+        //        .ToList();
+        //    return Json(subjects);
+        //}
         private void SendNotificatons(int classId, string message = "new exam notification")
         {
             var _class = _context.Classes.FirstOrDefault(Class => Class.ClassId == classId);

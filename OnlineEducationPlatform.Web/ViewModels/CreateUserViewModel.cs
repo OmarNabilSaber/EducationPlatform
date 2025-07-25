@@ -13,6 +13,7 @@ namespace OnlineEducationPlatform.Web.ViewModels
 
         [Required]
         public string Password { get; set; }
+        public string ConfirmPassword { get; set; }
 
         [Required]
         public string Role { get; set; } // "Student" or "Instructor"

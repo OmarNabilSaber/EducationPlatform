@@ -1,0 +1,101 @@
+﻿@model AssignmentGradeViewModel
+@{
+    ViewData["Title"] = "Grade Assignment";
+}
+<div class="container py-4">
+    <div class="mb-4">
+        <h2 class="fw-bold">@Model.AssignmentName</h2>
+        <div class="mb-2"><strong>Class:</strong> @Model.ClassName</div>
+        <div class="mb-2"><strong>Due Date:</strong> @Model.DueDate.ToString("yyyy-MM-dd HH:mm")</div>
+    </div>
+    <div class="mb-3">
+        <input type="text" id="studentSearch" class="form-control" placeholder="Search students by name or email..." />
+    </div>
+    <table class="table table-bordered table-hover align-middle" id="gradesTable">
+        <thead class="table-light">
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>state</th>
+                <th>Score</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var student in Model.StudentGrades)
+            {
+                <tr>
+                    <td>@student.StudentName</td>
+                    <td>@student.StudentEmail</td>
+                    <td>
+                        <span class="@(student.IsSubmitted ? "text-success" : "text-danger")">
+                        @(student.IsSubmitted ? "Submitted" : "Not submitted yet")
+                        </span> 
+                    </td>
+                    <td>
+                        <input @(student.IsSubmitted ? "" : "disabled")
+                            type="number" 
+                            class="form-control score-input" 
+                            name="Score_@student.StudintId" 
+                            value="@(student.Score.HasValue ? student.Score.ToString() : "")" 
+                            min="0"
+                            max="@Model.TotalScore" />
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="mt-3">
+        <button id="saveScoresBtn" class="btn btn-primary">Save Scores</button>
+        <span id="saveStatus" class="ms-3"></span>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        document.getElementById('studentSearch').addEventListener('input', function () {
+            var search = this.value.toLowerCase();
+            var rows = document.querySelectorAll('#gradesTable tbody tr');
+            rows.forEach(function(row) {
+                var name = row.children[0].textContent.toLowerCase();
+                var email = row.children[1].textContent.toLowerCase();
+                if (name.includes(search) || email.includes(search)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+        document.getElementById('saveScoresBtn').addEventListener('click', function () {
+            var inputs = document.querySelectorAll('.score-input:enabled');
+            var data = [];
+            inputs.forEach(function(input) {
+                var studentId = input.name.replace('Score_', '');
+                var score = input.value;
+                data.push({ studentId: studentId, score: score });
+            });
+            fetch(window.location.pathname, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+                },
+                body: JSON.stringify({ assignmentId: @Model.AssignmentId, scores: data })
+            })
+            .then(response => response.json())
+            .then(data => {
+                var status = document.getElementById('saveStatus');
+                if (data.success) {
+                    status.textContent = 'Scores saved successfully!';
+                    status.className = 'text-success ms-3';
+                } else {
+                    status.textContent = data.error || 'Failed to save scores.';
+                    status.className = 'text-danger ms-3';
+                }
+            })
+            .catch(() => {
+                var status = document.getElementById('saveStatus');
+                status.textContent = 'An error occurred.';
+                status.className = 'text-danger ms-3';
+            });
+        });
+    </script>
+}

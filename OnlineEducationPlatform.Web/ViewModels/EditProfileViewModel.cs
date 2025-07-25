@@ -14,5 +14,12 @@ namespace OnlineEducationPlatform.Web.ViewModels
         [Remote(action: "IsEmailAvailable", controller: "ManageAccount", ErrorMessage = "Email is already taken")]
         public string Email { get; set; }
 
+        // Password change fields
+        [DataType(DataType.Password)]
+        public string OldPassword { get; set; }
+        [DataType(DataType.Password)]
+        public string NewPassword { get; set; }
+        [DataType(DataType.Password)]
+        public string ConfirmNewPassword { get; set; }
     }
 }

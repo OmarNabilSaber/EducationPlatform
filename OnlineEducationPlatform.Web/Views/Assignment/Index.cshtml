@@ -17,6 +17,7 @@
             <tr>
                 <th>Title</th>
                 <th>Description</th>
+                <th>Total Score</th>
                 <th>Due Date</th>
                 <th>Subject</th>
                 <th>Class</th>
@@ -29,6 +30,7 @@
                 <tr>
                     <td>@item.Title</td>
                     <td>@item.Description</td>
+                    <td>@item.TotalScore</td>
                     <td>@item.DueDate.ToString("yyyy-MM-dd HH:mm")</td>
                     <td>@item.Subject?.Name</td>
                     <td>@item.Class?.ClassName</td>
@@ -43,6 +45,7 @@
                         }
                     </td>
                     <td>
+                        <a asp-action="Grade" asp-route-id="@item.AssignmentId" class="btn btn-outline-success btn-sm">Grade</a>
                         <a asp-action="Details" asp-route-id="@item.AssignmentId" class="btn btn-outline-secondary btn-sm me-1"><i class="bi bi-info-circle"></i></a>
                         @if (User.IsInRole("Instructor"))
                         {

@@ -25,6 +25,11 @@
                             <span asp-validation-for="Description" class="text-danger"></span>
                         </div>
                         <div class="mb-3">
+                            <label asp-for="TotalScore" class="form-label text-secondary"></label>
+                            <input asp-for="TotalScore" class="form-control" type="number" min="1" />
+                            <span asp-validation-for="TotalScore" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
                             <label asp-for="DueDate" class="form-label text-secondary"></label>
                             <input asp-for="DueDate" class="form-control" type="datetime-local" min="@now" value="@(Model.DueDate == DateTime.MinValue ? now : Model.DueDate.ToString("yyyy-MM-ddTHH:mm"))" />
                             <span asp-validation-for="DueDate" class="text-danger"></span>
@@ -60,42 +65,8 @@
     </div>
 </div>
 @section Scripts {
-    <script>
-        // Remove required/data-val-required from AssignmentFile input on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            var fileInput = document.getElementById('AssignmentFile');
-            if (fileInput) {
-                fileInput.removeAttribute('required');
-                fileInput.removeAttribute('data-val-required');
-            }
-        });
-        document.getElementById('classSelect').addEventListener('change', function() {
-            fetch('/Assignment/GetSubjectsForClass?classId=' + this.value)
-                .then(response => response.json())
-                .then(subjects => {
-                    var subjectSelect = document.getElementById('subjectSelect');
-                    subjectSelect.innerHTML = '';
-                    subjects.forEach(function(subj) {
-                        var opt = document.createElement('option');
-                        opt.value = subj.subjectId;
-                        opt.textContent = subj.name;
-                        subjectSelect.appendChild(opt);
-                    });
-                });
-        });
-        // JS validation for file required only if selected
-        document.querySelector('form').addEventListener('submit', function(e) {
-            var fileInput = document.getElementById('AssignmentFile');
-            var fileError = document.querySelector('span[data-valmsg-for="AssignmentFile"]');
-            if (fileInput && fileInput.value && !fileInput.value.toLowerCase().endsWith('.pdf')) {
-                e.preventDefault();
-                if (fileError) fileError.textContent = 'Only PDF files are allowed.';
-                fileInput.classList.add('is-invalid');
-            } else if (fileError) {
-                fileError.textContent = '';
-                fileInput.classList.remove('is-invalid');
-            }
-        });
+    <script scr="./js/Assignment/Edit.js">
+        
     </script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 }

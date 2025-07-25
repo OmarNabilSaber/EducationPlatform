@@ -29,3 +29,51 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+body {
+    background-color: #f8f9fa;
+}
+
+.navbar {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+}
+
+.card {
+    border-radius: 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+footer {
+    background: #fff;
+    border-top: 1px solid #eaeaea;
+}
+/* Notification overlay and panel */
+#notificationOverlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.4);
+    z-index: 1050;
+}
+
+#notificationPanel {
+    display: none;
+    position: fixed;
+    top: 80px;
+    right: 40px;
+    width: 350px;
+    max-width: 90vw;
+    background: #fff;
+    border-radius: 1rem;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    z-index: 1060;
+    padding: 1.5rem 1rem;
+}
+
+#notificationPanel .panel-header {
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+}

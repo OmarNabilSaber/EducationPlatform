@@ -8,19 +8,32 @@
 <h2>Edit Profile</h2>
 
 <form asp-action="Index" method="post" novalidate>
-    @* Display summary for any model-level errors *@
-    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="Email" class="form-label"></label>
+        <input readonly asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
 
     <div class="mb-3">
         <label asp-for="FullName" class="form-label"></label>
         <input asp-for="FullName" class="form-control" />
         <span asp-validation-for="FullName" class="text-danger"></span>
     </div>
-
     <div class="mb-3">
-        <label asp-for="Email" class="form-label"></label>
-        <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
+        <label for="OldPassword" class="form-label">Old Password</label>
+        <input type="password" name="OldPassword" class="form-control"/>
+        <span asp-validation-for="OldPassword" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label for="NewPassword" class="form-label">New Password</label>
+        <input type="password" name="NewPassword" class="form-control" />
+        <span asp-validation-for="NewPassword" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label for="ConfirmNewPassword" class="form-label">Confirm New Password</label>
+        <input type="password" name="ConfirmNewPassword" class="form-control" />
+        <span asp-validation-for="ConfirmNewPassword" class="text-danger"></span>
     </div>
 
     <button type="submit" class="btn btn-primary">Save</button>

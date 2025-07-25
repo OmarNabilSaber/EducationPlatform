@@ -179,7 +179,7 @@
         }
 
         function updateSubjectsForClass(classId, selectedSubjectId) {
-            fetch('/Exam/GetSubjectsForClass?classId=' + classId)
+            fetch('/ClassSubject/GetSubjectsForClass?classId=' + classId)
                 .then(response => response.json())
                 .then(subjects => {
                     var subjectSelect = document.getElementById('subjectSelect');

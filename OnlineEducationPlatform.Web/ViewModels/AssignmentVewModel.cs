@@ -24,5 +24,7 @@ namespace OnlineEducationPlatform.Web.ViewModels
         public List<SelectListItem> Subjects { get; set; } = new List<SelectListItem>();
         public string FilePath { get; set; }
         public IFormFile AssignmentFile { get; set; }
+        [Required]
+        public int TotalScore { get; set; }
     }
 }

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using OnlineEducationPlatform.Infrastructure.Data;
 using OnlineEducationPlatform.Web.Models;
 using OnlineEducationPlatform.Web.ViewModels;
@@ -27,7 +28,7 @@ namespace OnlineEducationPlatform.Web.Controllers
         }
 
         // GET: Assignment
-        [Authorize(Roles = "Admin,Instructor,Student")]
+        [Authorize(Roles = "Admin,Instructor")]
         public async Task<IActionResult> Index()
         {
             var assignments = new List<Assignment>();
@@ -37,17 +38,6 @@ namespace OnlineEducationPlatform.Web.Controllers
                     .Include(a => a.Class)
                     .Include(a => a.Subject)
                     .ToListAsync();
-            }
-            else if (User.IsInRole("Student"))
-            {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                var enrollment = _context.Enrollments
-                                        .FirstOrDefault(u => u.StudentId == userId);
-                var classId = enrollment?.ClassId;
-                assignments = _context.Assignments
-                    .Include(a => a.Class)
-                    .Include(a => a.Subject)
-                    .Where(a => a.ClassId == classId).ToList(); ;
             }
             else if (User.IsInRole("Instructor"))
             {
@@ -63,7 +53,7 @@ namespace OnlineEducationPlatform.Web.Controllers
         }
 
         // GET: Assignment/Details/5
-        [Authorize(Roles = "Admin,Instructor,Student")]
+        [Authorize(Roles = "Admin,Instructor")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -117,6 +107,11 @@ namespace OnlineEducationPlatform.Web.Controllers
                     ModelState.AddModelError("AssignmentFile", "Only PDF files are allowed.");
                     return View(model);
                 }
+                if (model.AssignmentFile.Length > 2 * 1024 * 1024)
+                {
+                    ModelState.AddModelError("AssignmentFile", "File size must not exceed 2MB.");
+                    return View(model);
+                }
                 if (!Directory.Exists(_assignmentFolder))
                     Directory.CreateDirectory(_assignmentFolder);
                 var fileName = $"assignment_{Guid.NewGuid()}.pdf";
@@ -134,7 +129,8 @@ namespace OnlineEducationPlatform.Web.Controllers
                 DueDate = model.DueDate,
                 ClassId = model.ClassId,
                 SubjectId = model.SubjectId,
-                FilePath = filePath != null ? $"/Assignments/{Path.GetFileName(filePath)}" : null
+                FilePath = filePath != null ? $"/Assignments/{Path.GetFileName(filePath)}" : null,
+                TotalScore = model.TotalScore
             };
             _context.Add(assignment);
             var subject = _context.Subjects.FirstOrDefault( s=> s.SubjectId == model.SubjectId );
@@ -205,6 +201,10 @@ namespace OnlineEducationPlatform.Web.Controllers
                 {
                     ModelState.AddModelError("AssignmentFile", "Only PDF files are allowed.");
                 }
+                if (model.AssignmentFile.Length > 2 * 1024 * 1024)
+                {
+                    ModelState.AddModelError("AssignmentFile", "File size must not exceed 2MB.");
+                }
             }
 
             if (!ModelState.IsValid)
@@ -219,6 +219,7 @@ namespace OnlineEducationPlatform.Web.Controllers
             assignment.DueDate = model.DueDate;
             assignment.ClassId = model.ClassId;
             assignment.SubjectId = model.SubjectId;
+            assignment.TotalScore = model.TotalScore;
 
             if (model.AssignmentFile != null)
             {
@@ -277,17 +278,78 @@ namespace OnlineEducationPlatform.Web.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
         [HttpGet]
         [Authorize(Roles = "Instructor")]
-        public JsonResult GetSubjectsForClass(int classId)
+        public async Task<IActionResult> Grade(int id)
         {
-            var subjects = _context.ClassSubjects
-                .Where(cs => cs.ClassId == classId)
-                .Select(cs => cs.Subject)
-                .Select(s => new { s.SubjectId, s.Name })
-                .ToList();
-            return Json(subjects);
+            var assignment = await _context.Assignments
+                .Include(a => a.Class)
+                    .ThenInclude(c => c.Enrollments)
+                        .ThenInclude(e => e.Student)
+                .FirstOrDefaultAsync(a => a.AssignmentId == id);
+
+            if (assignment == null)
+                return NotFound();
+
+            var studentsId = _context.Enrollments.Where(c => c.ClassId == assignment.ClassId).Select(s => s.StudentId);
+            var students = _context.Users.Where(u => studentsId.Contains(u.Id));
+            var Assignmintsubmitions = _context.AssignmentSubmission.Where(u => studentsId.Contains(u.StudentId));
+
+            var studentGrades = students.Select(s => new StudentGradeViewModel
+            {
+                StudintId = s.Id,
+                StudentName = s.FullName,
+                StudentEmail = s.Email,
+                IsSubmitted = Assignmintsubmitions.Any(_as => _as.StudentId == s.Id),
+                Score = Assignmintsubmitions
+                            .Any(_as => _as.StudentId == s.Id)
+                            ? Assignmintsubmitions
+                                .FirstOrDefault(_as => _as.StudentId == s.Id).Score
+                            : (int?)null
+            }).ToList();
+
+            var assignmentGrades = new AssignmentGradeViewModel
+            {
+                AssignmentId = assignment.AssignmentId,
+                AssignmentName = assignment.Title,
+                TotalScore = assignment.TotalScore,
+                ClassId = assignment.ClassId,
+                ClassName = assignment.Class.ClassName,
+                DueDate = assignment.DueDate,
+                StudentGrades = studentGrades
+            };
+
+            return View(assignmentGrades);
+        }
+        [HttpPost]
+        [Authorize(Roles = "Instructor")]
+        public async Task<IActionResult> Grade([FromBody] GradeScoresRequest request)
+        {
+            if (request == null || request.Scores == null)
+                return Json(new { success = false, error = "No scores submitted." });
+            foreach (var item in request.Scores)
+            {
+                var submission = await _context.AssignmentSubmission
+                            .FirstOrDefaultAsync(s => s.AssignmentId == request.AssignmentId && s.StudentId == item.StudentId);
+                if (submission != null)
+                {
+                    submission.Score = int.TryParse(item.Score, out var scoreVal) ? scoreVal : (int?)null;
+                }
+                
+            }
+            await _context.SaveChangesAsync();
+            return Json(new { success = true });
+        }
+
+        public class GradeScoresRequest
+        {
+            public int AssignmentId { get; set; }
+            public List<StudentScoreDto> Scores { get; set; }
+        }
+        public class StudentScoreDto
+        {
+            public string StudentId { get; set; }
+            public string Score { get; set; }
         }
 
         private void SendNotificaion(int classId, int SubjectId,string message = "new assignment notification")

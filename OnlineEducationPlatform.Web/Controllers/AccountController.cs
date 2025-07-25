@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using OnlineEducationPlatform.Web.Users;
 
 namespace OnlineEducationPlatform.Web.Controllers
 {
@@ -61,7 +60,6 @@ namespace OnlineEducationPlatform.Web.Controllers
             return View(model);
         }
 
-        [HttpPost]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();

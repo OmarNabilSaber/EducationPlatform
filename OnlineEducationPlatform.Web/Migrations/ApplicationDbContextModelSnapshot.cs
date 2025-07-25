@@ -184,7 +184,12 @@ namespace OnlineEducationPlatform.Web.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("TotalScore")
+                        .HasColumnType("int");
+
                     b.HasKey("AssignmentId");
+
+                    b.HasIndex("ClassId");
 
                     b.HasIndex("SubjectId");
 
@@ -203,13 +208,16 @@ namespace OnlineEducationPlatform.Web.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal?>("Score")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int?>("Score")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("SubmittedAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("AssignmentId", "StudentId");
+
+                    b.HasIndex("StudentId");
 
                     b.ToTable("AssignmentSubmission");
                 });
@@ -360,6 +368,7 @@ namespace OnlineEducationPlatform.Web.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("Score")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("StartedAt")
@@ -428,6 +437,7 @@ namespace OnlineEducationPlatform.Web.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Points")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Text")
@@ -606,7 +616,7 @@ namespace OnlineEducationPlatform.Web.Migrations
                 {
                     b.HasOne("OnlineEducationPlatform.Web.Models.Class", "Class")
                         .WithMany("Assignments")
-                        .HasForeignKey("SubjectId")
+                        .HasForeignKey("ClassId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -619,6 +629,25 @@ namespace OnlineEducationPlatform.Web.Migrations
                     b.Navigation("Class");
 
                     b.Navigation("Subject");
+                });
+
+            modelBuilder.Entity("OnlineEducationPlatform.Web.Models.AssignmentSubmission", b =>
+                {
+                    b.HasOne("OnlineEducationPlatform.Web.Models.Assignment", "Assignment")
+                        .WithMany("Submissions")
+                        .HasForeignKey("AssignmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("OnlineEducationPlatform.Web.Models.Student", "Student")
+                        .WithMany("AssignmentSubmission")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Assignment");
+
+                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("OnlineEducationPlatform.Web.Models.Class", b =>
@@ -729,6 +758,11 @@ namespace OnlineEducationPlatform.Web.Migrations
                     b.Navigation("Exam");
                 });
 
+            modelBuilder.Entity("OnlineEducationPlatform.Web.Models.Assignment", b =>
+                {
+                    b.Navigation("Submissions");
+                });
+
             modelBuilder.Entity("OnlineEducationPlatform.Web.Models.Class", b =>
                 {
                     b.Navigation("Assignments");
@@ -763,6 +797,8 @@ namespace OnlineEducationPlatform.Web.Migrations
 
             modelBuilder.Entity("OnlineEducationPlatform.Web.Models.Student", b =>
                 {
+                    b.Navigation("AssignmentSubmission");
+
                     b.Navigation("Enrollments");
 
                     b.Navigation("ExamSubmissions");

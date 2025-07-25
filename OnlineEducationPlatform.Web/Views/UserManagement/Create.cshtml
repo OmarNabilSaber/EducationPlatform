@@ -27,6 +27,11 @@
                     <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
                 <div class="mb-3">
+                    <label asp-for="ConfirmPassword" class="form-label fw-bold">Confirm Password</label>
+                    <input asp-for="ConfirmPassword" type="password" class="form-control border-1 border-bottom border-primary rounded-1" />
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
                     <label asp-for="Role" class="form-label fw-bold"></label>
                     <select asp-for="Role" class="form-control border-1 border-bottom border-primary rounded-1">
                         <option value="">Select a role</option>

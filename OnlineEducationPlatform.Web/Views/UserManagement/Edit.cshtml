@@ -30,6 +30,16 @@
                     </select>
                     <span asp-validation-for="Role" class="text-danger"></span>
                 </div>
+                <div class="mb-3">
+                    <label asp-for="Password" class="form-label fw-bold">New Password</label>
+                    <input asp-for="Password" type="password" class="form-control border-1 border-bottom border-primary rounded-1" placeholder="Leave blank to keep current password" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="ConfirmPassword" class="form-label fw-bold">Confirm New Password</label>
+                    <input asp-for="ConfirmPassword" type="password" class="form-control border-1 border-bottom border-primary rounded-1" placeholder="Leave blank to keep current password" />
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
                 <div class="d-grid">
                     
                     <button type="submit" class="btn btn-primary">Save</button>
@@ -39,3 +49,16 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            ['Password', 'ConfirmPassword'].forEach(function(id) {
+                var input = document.getElementById(id);
+                if (input) {
+                    input.removeAttribute('data-val-required');
+                }
+            });
+        });
+    </script>
+}

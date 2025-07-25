@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OnlineEducationPlatform.Infrastructure.Data;
-using OnlineEducationPlatform.Web.ViewModels;
+
 
 namespace OnlineEducationPlatform.Web.Controllers
 {
@@ -68,11 +69,18 @@ namespace OnlineEducationPlatform.Web.Controllers
                 return Json(new { success = false, error = ex.Message });
             }
         }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin,Instructor")]
+        public JsonResult GetSubjectsForClass(int classId)
+        {
+            var subjects = _context.ClassSubjects
+                .Where(cs => cs.ClassId == classId)
+                .Select(cs => cs.Subject)
+                .Select(s => new { s.SubjectId, s.Name })
+                .ToList();
+            return Json(subjects);
+        }
     }
 }
 
-public class ClassSubjectEditRequest
-{
-    public int ClassId { get; set; }
-    public List<int> SubjectIds { get; set; }
-}
