@@ -19,10 +19,12 @@ namespace OnlineEducationPlatform.Web.Controllers
         public IActionResult Index()
         {
             var studentId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            var enrollment = _context.Enrollments.FirstOrDefault( u => u.StudentId == studentId);
+            
 
             var exams = _context.Exams
                 .Include(e => e.Submissions)
-                .Where(e => DateTime.Now <= e.AvailableTo)
+                .Where(e => DateTime.Now <= e.AvailableTo && e.ClassId == enrollment.ClassId)
                 .Select(e => new ExamListItemViewModel
                 {
                     ExamId = e.ExamId,
