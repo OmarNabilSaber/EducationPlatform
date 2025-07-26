@@ -3,7 +3,10 @@
     ViewData["Title"] = "Edit Exam";
 }
 
-<div asp-validation-summary="All" class="alert alert-danger"></div>
+@if (!ViewData.ModelState.IsValid)
+{
+    <div asp-validation-summary="All" class="alert alert-danger"></div>
+}
 
 <div class="row justify-content-center" style="min-height: 70vh;">
     <form asp-action="Edit" method="post" onsubmit="reindexQuestions()" class="row w-100">

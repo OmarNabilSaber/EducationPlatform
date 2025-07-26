@@ -20,8 +20,6 @@ namespace OnlineEducationPlatform.Web.Controllers
         {
             var studentId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
             var enrollment = _context.Enrollments.FirstOrDefault( u => u.StudentId == studentId);
-            
-
             var exams = _context.Exams
                 .Include(e => e.Submissions)
                 .Where(e => DateTime.Now <= e.AvailableTo && e.ClassId == enrollment.ClassId)
