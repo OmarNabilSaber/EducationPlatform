@@ -1,0 +1,60 @@
+﻿@model ExamGradeViewModel
+@{
+    ViewData["Title"] = "Grade Assignment";
+}
+<div class="container py-4">
+    <div class="mb-4">
+        <h2 class="fw-bold">@Model.ExamName</h2>
+        <div class="mb-2"><strong>Class:</strong> @Model.ClassName</div>
+        <div class="mb-2"><strong>Available From:</strong> @Model.AvailableFrom.ToString("yyyy-MM-dd HH:mm")</div>
+        <div class="mb-2"><strong>Available To:</strong> @Model.AvailableTo.ToString("yyyy-MM-dd HH:mm")</div>
+    </div>
+    <div class="mb-3">
+        <input type="text" id="studentSearch" class="form-control" placeholder="Search students by name or email..." />
+    </div>
+    <table class="table table-bordered table-hover align-middle" id="gradesTable">
+        <thead class="table-light">
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>state</th>
+                <th>Score</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var student in Model.StudentGrades)
+            {
+                <tr>
+                    <td>@student.StudentName</td>
+                    <td>@student.StudentEmail</td>
+                    <td>
+                        <span class="@(student.IsSubmitted ? "text-success" : "text-danger")">
+                            @(student.IsSubmitted ? "Submitted" : "Not submitted yet")
+                        </span>
+                    </td>
+                    <td>
+                        <span class="@(student.Score >= Model.PassingScore ? "text-success" : "text-danger")">
+                            @(student.Score != null ? student.Score : 0) / @Model.PassingScore
+                        </span>
+                    </td>
+                    <td>
+                        @if (student.IsSubmitted)
+                        {
+                            <a class="btn btn-outline-info"
+                               asp-action="Result"
+                               asp-route-examId="@Model.ExamId"
+                               asp-route-studentId="@student.StudintId">
+                                View Result
+                            </a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
+@section Scripts {
+   
+}

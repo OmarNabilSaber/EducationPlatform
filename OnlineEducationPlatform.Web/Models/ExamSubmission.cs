@@ -18,7 +18,7 @@ namespace OnlineEducationPlatform.Web.Models
 
         // This gets stored in the DB
         public string AnswersJson { get; set; }
-        public decimal? Score { get; set; }
+        public int? Score { get; set; }
 
         // Relationships
         public int ExamId { get; set; }

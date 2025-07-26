@@ -35,16 +35,12 @@
                 <td>@exam.TimeLimitMinutes</td>
                 <td>@exam.PassingScore</td>
                 <td>
+                    <a asp-action="Submitions" asp-route-id="@exam.ExamId" class="btn btn-outline-success btn-sm">Submitions</a>
                     <a class="btn btn-sm btn-info" asp-action="Details" asp-route-id="@exam.ExamId">Details</a>
                     <a class="btn btn-sm btn-warning" asp-action="Edit" asp-route-id="@exam.ExamId">Edit</a>
                     <form asp-action="Delete" asp-route-id="@exam.ExamId" method="post" style="display:inline">
                         <button class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
                     </form>
-
-                    @if (User.Identity.IsAuthenticated && User.IsInRole("Student"))
-                    {
-                        <a asp-controller="StudentExam" asp-action="Solve" asp-route-id="@exam.ExamId" class="btn btn-sm btn-outline-primary">Solve</a>
-                    }
                 </td>
             </tr>
         }

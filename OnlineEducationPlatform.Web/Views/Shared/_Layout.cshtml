@@ -68,16 +68,27 @@
                         else
                         {
                             <li class="nav-item d-flex align-items-center me-2">
-                                <span class="navbar-text fw-semibold text-white bg-primary px-3 py-1 rounded-pill shadow-sm">Welcome, @user.FullName</span>
+                                <a asp-controller="ManageAccount" asp-action="Index">
+                                    <span class="navbar-text fw-semibold text-white bg-primary px-3 py-1 rounded-pill shadow-sm d-flex align-items-center">
+                                        <i class="bi bi-person-circle me-2" style="font-size: 2rem;"></i>
+                                        <span class="d-flex align-items-center">@user.FullName</span>
+                                    </span>
+                                </a>
                             </li>
-                            <li class="nav-item me-2">
-                                <a href="#" id="notificationBell" class="nav-link position-relative" title="Notifications">
-                                    <i class="bi bi-bell text-info fs-5" ></i>
+
+                            <!-- Notification Bell (Centered) -->
+                            <li class="nav-item d-flex align-items-center me-2">
+                                <a href="#" id="notificationBell" class="nav-link position-relative p-0" title="Notifications">
+                                    <i class="bi bi-bell text-info fs-5"></i>
                                     <span id="notificationDot" class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle d-none"></span>
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a class="btn btn-link nav-link" asp-controller="Account" asp-action="Logout" class="d-inline">Logout</a>
+
+                            <!-- Logout Link (Centered) -->
+                            <li class="nav-item d-flex align-items-center">
+                                <a class="btn btn-link nav-link p-0" asp-controller="Account" asp-action="Logout">
+                                    Logout
+                                </a>
                             </li>
                         }
                     </ul>

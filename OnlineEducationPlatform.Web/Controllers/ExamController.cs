@@ -259,21 +259,6 @@ namespace OnlineEducationPlatform.Web.Controllers
             _context.SaveChanges();
             return RedirectToAction("Index");
         }
-
-        //[HttpGet]
-        //[Authorize(Roles = "Admin,Instructor")]
-        //public JsonResult GetSubjectsForClass(int classId)
-        //{
-        //    var subjectIds = _context.ClassSubjects
-        //        .Where(cs => cs.ClassId == classId)
-        //        .Select(cs => cs.SubjectId)
-        //        .ToList();
-        //    var subjects = _context.Subjects
-        //        .Where(s => subjectIds.Contains(s.SubjectId))
-        //        .Select(s => new { s.SubjectId, s.Name })
-        //        .ToList();
-        //    return Json(subjects);
-        //}
         private void SendNotificatons(int classId, string message = "new exam notification")
         {
             var _class = _context.Classes.FirstOrDefault(Class => Class.ClassId == classId);
@@ -286,6 +271,81 @@ namespace OnlineEducationPlatform.Web.Controllers
             {
                 Notification.SendNotification(_context, studentId, message, "Exam Notification");
             }
+        }
+        public async Task<IActionResult> Submitions(int id)
+        {
+            var Exam = await _context.Exams
+                .Include(e => e.Class)
+                    .ThenInclude(c => c.Enrollments)
+                        .ThenInclude(e => e.Student)
+                .FirstOrDefaultAsync(e => e.ExamId == id);
+
+            if (Exam == null)
+                return NotFound();
+
+            var studentsId = _context.Enrollments.Where(c => c.ClassId == Exam.ClassId).Select(s => s.StudentId);
+            var students = _context.Users.Where(u => studentsId.Contains(u.Id));
+            var ExamSubmitions = _context.ExamSubmissions.Where(u => studentsId.Contains(u.StudentId));
+
+            var studentGrades = students.Select(s => new StudentGradeViewModel
+            {
+                StudintId = s.Id,
+                StudentName = s.FullName,
+                StudentEmail = s.Email,
+                IsSubmitted = ExamSubmitions.Any(es => es.StudentId == s.Id),
+                Score = ExamSubmitions
+                            .Any(es => es.StudentId == s.Id)
+                            ? ExamSubmitions
+                                .FirstOrDefault(es => es.StudentId == s.Id).Score
+                            : (int?)null
+            }).ToList();
+
+            var assignmentGrades = new ExamGradeViewModel
+            {
+                ExamId = Exam.ExamId,
+                ExamName = Exam.Title,
+                PassingScore = Exam.PassingScore,
+                ClassId = Exam.ClassId,
+                ClassName = Exam.Class.ClassName,
+                AvailableFrom = Exam.AvailableFrom,
+                AvailableTo = Exam.AvailableTo,
+                StudentGrades = studentGrades
+            };
+
+            return View(assignmentGrades);
+        }
+        public IActionResult Result(int examId, string studentId)
+        {
+            var student = _context.Users.FirstOrDefault(s => s.Id == studentId);
+            var submission = _context.ExamSubmissions
+                .Include(s => s.Exam)
+                    .ThenInclude(e => e.Questions)
+                .FirstOrDefault(s => s.ExamId == examId && s.StudentId == studentId);
+
+            if (submission == null)
+                return NotFound();
+
+            var viewModel = new StudentSolveExamViewModel
+            {
+                ExamId = submission.ExamId,
+                Title = submission.Exam.Title,
+                PassingScore = submission.Exam.PassingScore,
+                StudentName = student.FullName,
+                Questions = submission.Exam.Questions.Select(q => new StudentQuestionAnswerViewModel
+                {
+                    QuestionId = q.QuestionId,
+                    Text = q.Text,
+                    Options = q.Options ?? new List<string>(),
+                    Answer = submission.Answers != null && submission.Answers.ContainsKey(q.QuestionId)
+                ? submission.Answers[q.QuestionId]
+                : null,
+                    CorrectAnswer = q.CorrectAnswer
+                }).ToList()
+
+            };
+
+            ViewBag.StudentScore = submission.Score;
+            return View("Result", viewModel);
         }
     }
 }
