@@ -87,7 +87,7 @@
             for (let i = 0; i < q.options.length; i++) {
                 html += `
                     <div class="input-group mb-1">
-                        <input class="form-control question-option" value="${q.options[i]}" required />
+                        <input class="form-control question-option" value="${q.options[i]}" required oninput="updateCorrectAnswerDropdown('${qId}')" />
                     </div>
                 `;
             }
@@ -96,7 +96,7 @@
                     </div>
                     <div class="mb-2">
                         <label>Correct Answer</label>
-                        <input class="form-control question-correct" value="${q.correctAnswer}" required />
+                        <select class="form-select question-correct" required></select>
                     </div>
                 </div>
             `;
@@ -104,6 +104,7 @@
             questionIndex++;
             renumberQuestions();
             reindexQuestions();
+            updateCorrectAnswerDropdown(qId, q.correctAnswer);
         }
 
         function addQuestion() {
@@ -159,11 +160,32 @@
             const optionCount = optionsDiv.querySelectorAll('.question-option').length;
             const optionInput = `
                 <div class="input-group mb-1">
-                    <input class="form-control question-option" required />
+                    <input class="form-control question-option" required oninput="updateCorrectAnswerDropdown(this.closest('.card').id)" />
                 </div>
             `;
             optionsDiv.insertAdjacentHTML('beforeend', optionInput);
             reindexQuestions();
+            updateCorrectAnswerDropdown(optionsDiv.closest('.card').id);
+        }
+
+        function updateCorrectAnswerDropdown(qId, selectedValue) {
+            const qCard = document.getElementById(qId);
+            if (!qCard) return;
+            const options = qCard.querySelectorAll('.question-option');
+            const correctSelect = qCard.querySelector('.question-correct');
+            if (!correctSelect) return;
+            const currentValue = selectedValue !== undefined ? selectedValue : correctSelect.value;
+            correctSelect.innerHTML = '';
+            options.forEach(opt => {
+                const val = opt.value;
+                if (val.trim() !== "") {
+                    const option = document.createElement('option');
+                    option.value = val;
+                    option.textContent = val;
+                    if (val === currentValue) option.selected = true;
+                    correctSelect.appendChild(option);
+                }
+            });
         }
 
         function updateSubjectsForClass(classId, selectedSubjectId) {
