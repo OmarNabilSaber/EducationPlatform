@@ -12,82 +12,146 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] </title>
+    <title>@ViewData["Title"] - Education Platform</title>
+    
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/OnlineEducationPlatform.Web.styles.css" asp-append-version="true" />
+    <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/modern-layout.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/OnlineEducationPlatform.Web.styles.css" asp-append-version="true" />
 
     @RenderSection("Styles", required: false)
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+        <nav class="navbar navbar-expand-lg">
             <div class="container">
-                <a class="navbar-brand fw-bold text-white" asp-area="" asp-controller="Home" asp-action="Index">OnlineEducationPlatform</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <i class="bi bi-mortarboard-fill me-2"></i>Education Platform
+                </a>
+                
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+                
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
+                                <i class="bi bi-house me-1"></i>Home
+                            </a>
                         </li>
 
                         @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
                         {
-                            <li class="nav-item"><a class="nav-link" asp-controller="UserManagement" asp-action="Index">Manage Users</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Class" asp-action="Index">Classes</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Subject" asp-action="Index">Subjects</a></li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="UserManagement" asp-action="Index">
+                                    <i class="bi bi-people me-1"></i>Manage Users
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Class" asp-action="Index">
+                                    <i class="bi bi-collection me-1"></i>Classes
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Subject" asp-action="Index">
+                                    <i class="bi bi-book me-1"></i>Subjects
+                                </a>
+                            </li>
                         }
+                        
                         @if (User.Identity.IsAuthenticated && !User.IsInRole("Admin"))
                         {
-                            <li class="nav-item"><a class="nav-link" asp-controller="ManageAccount" asp-action="Index">My Account</a></li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="ManageAccount" asp-action="Index">
+                                    <i class="bi bi-person-circle me-1"></i>My Account
+                                </a>
+                            </li>
                         }
+                        
                         @if (User.Identity.IsAuthenticated && User.IsInRole("Student"))
                         {
-                            <li class="nav-item"><a class="nav-link" asp-controller="StudentExam" asp-action="Index">Exams</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="StudentAssignment" asp-action="Index">Assignment</a></li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="StudentExam" asp-action="Index">
+                                    <i class="bi bi-file-earmark-text me-1"></i>Exams
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="StudentAssignment" asp-action="Index">
+                                    <i class="bi bi-journal-check me-1"></i>Assignments
+                                </a>
+                            </li>
                         }
+                        
                         @if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Instructor")))
                         {
-                            <li class="nav-item"><a class="nav-link" asp-controller="Assignment" asp-action="Index">Assignment</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Exam" asp-action="Index">Exams</a></li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Assignment" asp-action="Index">
+                                    <i class="bi bi-journal-check me-1"></i>Assignments
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Exam" asp-action="Index">
+                                    <i class="bi bi-file-earmark-text me-1"></i>Exams
+                                </a>
+                            </li>
                         }
+                        
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Book" asp-action="Index">Books</a>
+                            <a class="nav-link" asp-area="" asp-controller="Book" asp-action="Index">
+                                <i class="bi bi-collection me-1"></i>Books
+                            </a>
                         </li>
                     </ul>
+                    
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                        
                         @if (!User.Identity.IsAuthenticated)
                         {
-                            <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Login">Login</a></li>
+                            <li class="nav-item">
+                                <a class="nav-link btn-simple" asp-controller="Account" asp-action="Login">
+                                    <i class="bi bi-box-arrow-in-right me-1"></i>Login
+                                </a>
+                            </li>
                         }
                         else
                         {
-                            <li class="nav-item d-flex align-items-center me-2">
-                                <a asp-controller="ManageAccount" asp-action="Index">
-                                    <span class="navbar-text fw-semibold text-white bg-primary px-3 py-1 rounded-pill shadow-sm d-flex align-items-center">
-                                        <i class="bi bi-person-circle me-2" style="font-size: 2rem;"></i>
-                                        <span class="d-flex align-items-center">@user.FullName</span>
-                                    </span>
+                            <li class="nav-item d-flex align-items-center me-3">
+                                <a asp-controller="ManageAccount" asp-action="Index" class="user-profile">
+                                    <i class="bi bi-person-circle"></i>
+                                    <span>@user.FullName</span>
                                 </a>
                             </li>
 
-                            <!-- Notification Bell (Centered) -->
-                            <li class="nav-item d-flex align-items-center me-2">
-                                <a href="#" id="notificationBell" class="nav-link position-relative p-0" title="Notifications">
-                                    <i class="bi bi-bell text-info fs-5"></i>
-                                    <span id="notificationDot" class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle d-none"></span>
+                            <li class="nav-item d-flex align-items-center me-3 position-relative">
+                                <a href="#" id="notificationBell" class="notification-bell" title="Notifications">
+                                    <i class="bi bi-bell"></i>
+                                    <span id="notificationDot" class="notification-dot d-none"></span>
                                 </a>
+                                <!-- Notification Panel positioned relative to bell -->
+                                <div id="notificationPanel" class="notification-panel" style="display: none;">
+                                    <div class="panel-header">
+                                        <i class="bi bi-bell me-2"></i>Notifications
+                                        <button type="button" class="btn-close" id="closeNotificationPanel" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="notification-loading">
+                                            <i class="bi bi-hourglass-split"></i> Loading notifications...
+                                        </div>
+                                    </div>
+                                </div>
                             </li>
 
-                            <!-- Logout Link (Centered) -->
                             <li class="nav-item d-flex align-items-center">
-                                <a class="btn btn-link nav-link p-0" asp-controller="Account" asp-action="Logout">
-                                    Logout
+                                <a class="logout-btn" asp-controller="Account" asp-action="Logout">
+                                    <i class="bi bi-box-arrow-right me-1"></i>Logout
                                 </a>
                             </li>
                         }
@@ -96,46 +160,224 @@
             </div>
         </nav>
     </header>
-    <div class="container pb-5">
-        <main role="main" class="pb-3">
+    
+    <div class="container flex-grow-1">
+        <main role="main" class="main-content">
             @RenderBody()
         </main>
     </div>
-    <footer class="footer text-center py-3 mt-auto">
+    
+    <footer class="footer">
         <div class="container">
-            <span class="text-muted">&copy; 2025 - OnlineEducationPlatform.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a></span>
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start">
+                    <span>&copy; 2025 - Education Platform</span>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy Policy</a>
+                    <span class="mx-2">|</span>
+                    <a href="#" onclick="showAbout()">About</a>
+                </div>
+            </div>
         </div>
     </footer>
-    <div id="notificationOverlay"></div>
-    <div id="notificationPanel">
-        <div class="panel-header">Notifications</div>
-        <div class="panel-body">
-            <p class="text-muted">No new notifications.</p>
-        </div>
-    </div>
+    
+    <!-- Notification Overlay -->
+    <div id="notificationOverlay" class="notification-overlay"></div>
+    <!-- Scripts -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery-validation-unobtrusive@3.2.12/dist/jquery.validate.unobtrusive.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    
     <script>
+        // Modern Layout JavaScript
         $(function () {
+            // Notification system
             var $bell = $('#notificationBell');
             var $panel = $('#notificationPanel');
             var $overlay = $('#notificationOverlay');
+            var $panelBody = $('.panel-body');
+            var $notificationDot = $('#notificationDot');
+            
+            // Debug: Check if elements exist
+            console.log('Bell element:', $bell.length);
+            console.log('Panel element:', $panel.length);
+            console.log('Overlay element:', $overlay.length);
+            console.log('Panel body element:', $panelBody.length);
 
+            // Function to fetch notifications
+            function fetchNotifications() {
+                $.ajax({
+                    url: '/Notification/GetUserNotifications',
+                    method: 'GET',
+                    success: function(data) {
+                        displayNotifications(data);
+                        updateNotificationDot(data);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error fetching notifications:', error);
+                        $panelBody.html('<p class="text-muted">Error loading notifications.</p>');
+                    }
+                });
+            }
+
+            // Function to display notifications
+            function displayNotifications(notifications) {
+                if (!notifications || notifications.length === 0) {
+                    $panelBody.html('<p class="text-muted">No new notifications.</p>');
+                    return;
+                }
+
+                var html = '';
+                notifications.forEach(function(notification) {
+                    var readClass = notification.isRead ? 'notification-read' : 'notification-unread';
+                    var readIcon = notification.isRead ? 'bi-check-circle' : 'bi-circle';
+                    var timeAgo = getTimeAgo(notification.createdAt);
+                    
+                    html += `
+                        <div class="notification-item ${readClass}" data-id="${notification.id}">
+                            <div class="notification-icon">
+                                <i class="bi ${readIcon}"></i>
+                            </div>
+                            <div class="notification-content">
+                                <div class="notification-title">${notification.title}</div>
+                                <div class="notification-message">${notification.message}</div>
+                                <div class="notification-time">${timeAgo}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                $panelBody.html(html);
+            }
+
+            // Function to update notification dot
+            function updateNotificationDot(notifications) {
+                var unreadCount = notifications.filter(function(n) { return !n.isRead; }).length;
+                if (unreadCount > 0) {
+                    $notificationDot.removeClass('d-none').text(unreadCount > 9 ? '9+' : unreadCount);
+                } else {
+                    $notificationDot.addClass('d-none');
+                }
+            }
+
+            // Function to get time ago
+            function getTimeAgo(dateString) {
+                var date = new Date(dateString);
+                var now = new Date();
+                var diffInSeconds = Math.floor((now - date) / 1000);
+                
+                if (diffInSeconds < 60) return 'Just now';
+                if (diffInSeconds < 3600) return Math.floor(diffInSeconds / 60) + 'm ago';
+                if (diffInSeconds < 86400) return Math.floor(diffInSeconds / 3600) + 'h ago';
+                return Math.floor(diffInSeconds / 86400) + 'd ago';
+            }
+
+            // Bell click handler
             $bell.on('click', function (e) {
                 e.preventDefault();
-                $panel.show();
-                $overlay.show();
+                console.log('Bell clicked!'); // Debug log
+                fetchNotifications();
+                $panel.toggle();
+                console.log('Panel display:', $panel.css('display')); // Debug log
             });
 
-            $overlay.on('click', function () {
+            // Close button handler
+            $('#closeNotificationPanel').on('click', function () {
                 $panel.hide();
-                $overlay.hide();
             });
+
+            // Close panel when clicking outside
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('#notificationBell, #notificationPanel').length) {
+                    $panel.hide();
+                }
+            });
+
+            // Add smooth animations to navbar links
+            $('.navbar-nav .nav-link').on('click', function() {
+                $(this).addClass('active');
+                setTimeout(() => {
+                    $(this).removeClass('active');
+                }, 200);
+            });
+
+            // Add loading states to buttons
+            $('.btn-simple').on('click', function() {
+                var $btn = $(this);
+                var originalText = $btn.html();
+                $btn.addClass('loading').html('<i class="bi bi-hourglass-split"></i> Loading...');
+                
+                setTimeout(() => {
+                    $btn.removeClass('loading').html(originalText);
+                }, 2000);
+            });
+
+            // Add hover effects to cards
+            $('.simple-card').hover(
+                function() {
+                    $(this).addClass('hover');
+                },
+                function() {
+                    $(this).removeClass('hover');
+                }
+            );
+
+            // Initialize tooltips
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+
+            // Add scroll effects
+            $(window).scroll(function() {
+                var scroll = $(window).scrollTop();
+                if (scroll > 50) {
+                    $('.navbar').addClass('scrolled');
+                } else {
+                    $('.navbar').removeClass('scrolled');
+                }
+            });
+
+            // Add keyboard navigation
+            $(document).keydown(function(e) {
+                if (e.key === 'Escape' && $panel.is(':visible')) {
+                    $panel.hide();
+                }
+            });
+
+            // Check for notifications on page load (but don't show panel)
+            fetchNotifications();
+        });
+
+        // About modal function
+        function showAbout() {
+            // You can implement an about modal here
+            alert('Education Platform - A modern learning management system designed to provide an excellent educational experience for students, teachers, and administrators.');
+        }
+
+        // Add modern loading animation
+        $(window).on('load', function() {
+            $('body').addClass('loaded');
+        });
+
+        // Add smooth scrolling for anchor links
+        $('a[href^="#"]').on('click', function(event) {
+            var href = $(this).attr('href');
+            if (href && href !== '#') {
+                var target = $(href);
+                if (target.length) {
+                    event.preventDefault();
+                    $('html, body').stop().animate({
+                        scrollTop: target.offset().top - 80
+                    }, 1000);
+                }
+            }
         });
     </script>
+    
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

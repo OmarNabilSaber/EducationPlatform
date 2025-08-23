@@ -19,61 +19,82 @@ html {
 
 body {
   margin-bottom: 60px;
-}
-
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
-}
-
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
-}
-body {
-    background-color: #f8f9fa;
+  background-color: #f8f9fa;
+  color: #212529;
 }
 
 .navbar {
-    box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.03);
 }
 
 .card {
-    border-radius: 1rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  border-radius: 1rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
 
 footer {
-    background: #fff;
-    border-top: 1px solid #eaeaea;
+  background: #fff;
+  border-top: 1px solid #eaeaea;
 }
+
+/* Tables */
+.table-modern {
+  background: #fff;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+.table-modern thead th {
+  background: #f1f3f5;
+  color: #495057;
+  font-weight: 600;
+}
+.table-modern tbody tr:hover {
+  background: #fafbfc;
+}
+
+/* Form labels and sections */
+.form-label {
+  font-weight: 600;
+}
+.section-title {
+  font-weight: 700;
+  color: #0d6efd;
+}
+
+/* Utilities */
+.shadow-soft { box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+.radius-lg { border-radius: 1rem; }
+.radius-xl { border-radius: 1.5rem; }
+.bg-surface { background: #f9fafc; }
+
 /* Notification overlay and panel */
 #notificationOverlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0,0,0,0.4);
-    z-index: 1050;
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.4);
+  z-index: 1050;
 }
 
 #notificationPanel {
-    display: none;
-    position: fixed;
-    top: 80px;
-    right: 40px;
-    width: 350px;
-    max-width: 90vw;
-    background: #fff;
-    border-radius: 1rem;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
-    z-index: 1060;
-    padding: 1.5rem 1rem;
+  display: none;
+  position: fixed;
+  top: 80px;
+  right: 40px;
+  width: 350px;
+  max-width: 90vw;
+  background: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  z-index: 1060;
+  padding: 1.5rem 1rem;
 }
 
 #notificationPanel .panel-header {
-    font-weight: bold;
-    font-size: 1.1rem;
-    margin-bottom: 1rem;
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
 }

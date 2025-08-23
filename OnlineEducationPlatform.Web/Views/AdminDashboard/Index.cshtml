@@ -1,69 +1,102 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Admin Dashboard";
 }
 
-<div class="row g-4">
-    <div class="col-md-4">
-        <div class="card text-bg-success h-100">
-            <div class="card-body">
-                <h5 class="card-title">Assignments</h5>
-                <p class="card-text">See Assignments</p>
-                <a asp-controller="Assignment" asp-action="Index" class="btn btn-light">Go to Assignments</a>
+@section Styles {
+    <link href="~/css/admin-dashboard.css" rel="stylesheet" />
+}
+
+<div class="admin-dashboard">
+    <div class="container">
+        <div class="dashboard-header">
+            <h1 class="dashboard-title">Admin Dashboard</h1>
+            <p class="dashboard-subtitle">Manage your education platform with ease</p>
+        </div>
+        
+        <div class="dashboard-grid">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="dashboard-card card-assignments">
+                        <div class="card-icon">
+                            <i class="bi bi-journal-check"></i>
+                        </div>
+                        <h5 class="card-title">Assignments</h5>
+                        <p class="card-description">Create, manage, and grade student assignments across all classes and subjects.</p>
+                        <a asp-controller="Assignment" asp-action="Index" class="card-button">
+                            <i class="bi bi-arrow-right"></i> Manage Assignments
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="dashboard-card card-exams">
+                        <div class="card-icon">
+                            <i class="bi bi-file-earmark-text"></i>
+                        </div>
+                        <h5 class="card-title">Exams</h5>
+                        <p class="card-description">Create comprehensive exams, set time limits, and review student submissions with detailed analytics.</p>
+                        <a asp-controller="Exam" asp-action="Index" class="card-button">
+                            <i class="bi bi-arrow-right"></i> Manage Exams
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="dashboard-card card-classes">
+                        <div class="card-icon">
+                            <i class="bi bi-people"></i>
+                        </div>
+                        <h5 class="card-title">Classes</h5>
+                        <p class="card-description">Organize students into classes, manage enrollments, and track academic progress.</p>
+                        <a asp-controller="Class" asp-action="Index" class="card-button">
+                            <i class="bi bi-arrow-right"></i> Manage Classes
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="dashboard-card card-subjects">
+                        <div class="card-icon">
+                            <i class="bi bi-book"></i>
+                        </div>
+                        <h5 class="card-title">Subjects</h5>
+                        <p class="card-description">Define and organize subjects, link them to classes, and manage curriculum content.</p>
+                        <a asp-controller="Subject" asp-action="Index" class="card-button">
+                            <i class="bi bi-arrow-right"></i> Manage Subjects
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="dashboard-card card-users">
+                        <div class="card-icon">
+                            <i class="bi bi-person-gear"></i>
+                        </div>
+                        <h5 class="card-title">User Management</h5>
+                        <p class="card-description">Add, edit, and manage user accounts for students, teachers, and administrators.</p>
+                        <a asp-controller="UserManagement" asp-action="Index" class="card-button">
+                            <i class="bi bi-arrow-right"></i> Manage Users
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="dashboard-card card-books">
+                        <div class="card-icon">
+                            <i class="bi bi-collection"></i>
+                        </div>
+                        <h5 class="card-title">Books & Resources</h5>
+                        <p class="card-description">Upload and organize educational materials, textbooks, and digital resources for students.</p>
+                        <a asp-controller="Book" asp-action="Index" class="card-button">
+                            <i class="bi bi-arrow-right"></i> Manage Books
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-
-    <div class="col-md-4">
-        <div class="card text-bg-primary h-100">
-            <div class="card-body">
-                <h5 class="card-title">Manage Exams</h5>
-                <p class="card-text">Create and manage all exams for your classes.</p>
-                <a asp-controller="Exam" asp-action="Index" class="btn btn-light">Go to Exams</a>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-4">
-        <div class="card text-bg-info h-100">
-            <div class="card-body">
-                <h5 class="card-title">Classes</h5>
-                <p class="card-text">View and edit your class list and assignments.</p>
-                <a asp-controller="Class" asp-action="Index" class="btn btn-light">Go to Classes</a>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-4">
-        <div class="card text-bg-warning h-100">
-            <div class="card-body">
-                <h5 class="card-title">Subjects</h5>
-                <p class="card-text">Manage subjects and their associations with classes.</p>
-                <a asp-controller="Subject" asp-action="Index" class="btn btn-light">Go to Subjects</a>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="col-md-4">
-        <div class="card text-bg-danger h-100">
-            <div class="card-body">
-                <h5 class="card-title">User Management</h5>
-                <p class="card-text">View and manage user accounts.</p>
-                <a asp-controller="UserManagement" asp-action="Index" class="btn btn-light">Manage Users</a>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="col-md-4">
-        <div class="card text-bg-secondary h-100">
-            <div class="card-body">
-                <h5 class="card-title">Books</h5>
-                <p class="card-text">Browse educational books and resources.</p>
-                <a asp-controller="Book" asp-action="Index" class="btn btn-light">Go to Books</a>
-            </div>
-        </div>
-    </div>
-
-
 </div>
+
+@section Scripts {
+    <script src="~/js/admin-dashboard.js"></script>
+}

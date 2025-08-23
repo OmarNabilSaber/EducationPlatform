@@ -2,6 +2,29 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
+    ViewData["Title"] = "Access Denied";
 }
-<h2>Access Denied</h2>
-<p>You are not allowed to access this page.</p>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-soft radius-xl">
+                <div class="card-body text-center p-5">
+                    <div class="display-6 text-danger mb-3">
+                        <i class="bi bi-shield-lock"></i>
+                    </div>
+                    <h2 class="fw-bold mb-2">Access Denied</h2>
+                    <p class="text-secondary mb-4">You are not allowed to access this page.</p>
+                    <div class="d-flex gap-2 justify-content-center">
+                        <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">
+                            <i class="bi bi-house me-1"></i> Home
+                        </a>
+                        <a asp-controller="Account" asp-action="Login" class="btn btn-primary">
+                            <i class="bi bi-box-arrow-in-right me-1"></i> Login
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
