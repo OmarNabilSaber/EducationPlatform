@@ -104,7 +104,7 @@ Only Admin can:
 
 ## 📦 Tools Used
 
-- [.NET 7 / .NET 8](https://dotnet.microsoft.com/)
+- [.NET 9](https://dotnet.microsoft.com/)
 - ASP.NET Core MVC
 - Entity Framework Core
 - ASP.NET Identity
